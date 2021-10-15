@@ -6,7 +6,7 @@ class Collector extends Models {
 
 Collector.init({
     name: DataTypes.STRING,
-    budget: DataTypes.DEC
+    budget: DataTypes.DOUBLE
 }, {
     sequelize: db
 }
