@@ -12,8 +12,40 @@ seed()
 
 //*************** ROUTES ******************//
 app.get('/allCards', async (req, res) => {
-    let allCards = await Card.findAll()  // SELECT * FROM MUSIC
+    let allCards = await Card.findAll()
     res.json({allCards})
+})
+
+app.get('/allCollectors', async (req,res) => {
+    let allCollectors = await Collector.findAll()
+    res.json({allCollectors})
+})
+
+app.get('/:id/pack', async (req,res) => {
+    let ids = []
+    let cards = []
+    for(let i = 0; i < 10; i++) {
+        let id = Math.floor(Math.random() * 102) + 1
+        while(ids.includes(id)) {
+            id = Math.floor(Math.random() * 102) + 1
+        }
+        ids.push(id)
+        let oneCard = await Card.findByPk(id)
+        cards.push(oneCard)
+    }
+    res.json({cards})
+})
+
+app.get('/:id/pack/:cardid/buy', async (req,res) => {
+
+})
+
+app.get('/:id/pack/:cardid/sell', async (req,res) => {
+
+})
+
+app.get('/:id/pack/:cardid/trade', async (req,res) => {
+
 })
 
 app.listen( PORT, () => {
