@@ -1,14 +1,16 @@
-const {db,DataTypes,Models} = require(`../db`)
+const {db,DataTypes,Model} = require(`./db`)
 
-class Card extends Models {
+class Card extends Model {
 
 }
 
 Card.init({
-
     name: DataTypes.STRING,
-    imgurl: DataTypes.STRING,
-    cost: DataTypes.DEC
+    level: DataTypes.DOUBLE,
+    price: DataTypes.DOUBLE,
+    rarity: DataTypes.STRING,
+    number: DataTypes.INTEGER,
+    image: DataTypes.STRING
 }, {
     sequelize: db
 }

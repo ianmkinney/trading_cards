@@ -1,12 +1,12 @@
-const {db,DataTypes,Models} = require('../db')
+const {db,DataTypes,Model} = require('./db')
 
-class Collector extends Models {
+class Collector extends Model {
 
 }
 
 Collector.init({
     name: DataTypes.STRING,
-    budget: DataTypes.DEC
+    budget: DataTypes.DOUBLE
 }, {
     sequelize: db
 }
