@@ -2,7 +2,8 @@ const path = require('path')
 const fs = require('fs').promises
 
 const {db} = require('./db')
-const { PokemonCards } = require('./models/index')
+const { Card } = require('./models/index')
+const { Collector } = require('./models/index')
 
 const seed = async () => {
     await db.sync({ force: true });
@@ -12,10 +13,12 @@ const seed = async () => {
 
     const {data} = JSON.parse(String(buffer));
 
-    const cardPromises = data.map(cards => PokemonCards.create(cards));
+    const cardPromises = data.map(card => Card.create(card));
+    const collectorPromises = data.map(collector => Collector.create(collector));
 
     await Promise.all(cardPromises);
-    console.log('Card database info populated')
+    await Promise.all(collectorPromises);
+    console.log('Card and collector database info populated')
 }
 
 module.exports = seed;
