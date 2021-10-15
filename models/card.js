@@ -8,7 +8,7 @@ Card.init({
 
     name: DataTypes.STRING,
     imgurl: DataTypes.STRING,
-    cost: DataTypes.DEC
+    cost: DataTypes.DOUBLE
 }, {
     sequelize: db
 }
