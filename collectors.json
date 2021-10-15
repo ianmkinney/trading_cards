@@ -1,5 +1,7 @@
 {
     "data": [
-        {""}
+        {"name": "Ian", "budget": 300.0},
+        {"name": "Ayden", "budget": 300.0},
+        {"name": "Kevin", "budget": 300.0}
     ]
 }
