@@ -9,7 +9,7 @@ Card.init({
     name: DataTypes.STRING,
     level: DataTypes.DOUBLE,
     price: DataTypes.DOUBLE,
-    rarity: DataTypes.DOUBLE,
+    rarity: DataTypes.STRING,
     image: DataTypes.STRING
 }, {
     sequelize: db
