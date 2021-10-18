@@ -41,9 +41,14 @@ app.get('/:id/pack/:cardid/buy', async (req,res) => {
     let cardID = req.params.cardid;
     let user = await Collector.findByPk(userID);
     let selectedCard = await Card.findByPk(cardID);
-    selectedCard.belongsTo(user);
-    user.budget = user.budget - selectedCard.price
-    res.json(user)
+    if(user.budget > selectedCard.price) {
+        user.budget = user.budget - selectedCard.price
+        user.save()
+        res.send(`<h1>${selectedCard.name} was purchased for ${selectedCard.price}!</h1>
+                  <h2>${user.name}'s budget is at $${user.budget}</h2>`)
+    } else {
+        res.send(`<h1>Card is too expensive<h1>`)
+    }
 })
 
 app.get('/:id/pack/:cardid/sell', async (req,res) => {
