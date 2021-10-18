@@ -58,21 +58,25 @@ app.get('/:id/pack/:cardid/buy', async (req,res) => {
 
 //selling a card
 app.get('/:id/pack/:cardid/sell', async (req,res) => {
-    let userID = req.pararms.id;
+    let userID = req.params.id;
     let cardID = req.params.cardid;
     let user = await Collector.findByPk(userID);
     let selectedCard = await Card.findByPk(cardID);
-    user.budget = user.budget + selectedCard.price;
-    user.save();
-
-    user.removeCard(selectedCard);
-    
-    res.send(`<h1>${selectedCard.name} was sold for ${selectedCard.price}!</h1>
-              <h2>${user.name}'s budget is at $${user.budget}</h2>`)
-
+    if(selectedCard.CollectorId == userID) {
+        user.budget = user.budget + selectedCard.price;
+        await user.save();
+        await user.removeCard(selectedCard);
+        res.send(`<h1>${selectedCard.name} was sold for ${selectedCard.price}!</h1>
+                  <h2>${user.name}'s budget is at $${user.budget}</h2>`)
+    } else if(selectedCard.CollectorId == null) {
+        res.send('<h1>Card has not be purchased by a collector, so it can not be sold.')
+    } else {
+        conflictUser = await Collector.findByPk(selectedCard.CollectorId)
+        res.send(`<h1>Card can not be sold, car belongs to ${conflictUser.name}`)
+    }
 })
 
-app.get('/:id/pack/:cardid/trade', async (req,res) => {
+app.get('/:id/pack/:cardid1/:cardid2/trade', async (req,res) => {
 
 })
 
