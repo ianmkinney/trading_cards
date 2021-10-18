@@ -51,7 +51,19 @@ app.get('/:id/pack/:cardid/buy', async (req,res) => {
     }
 })
 
+//selling a card
 app.get('/:id/pack/:cardid/sell', async (req,res) => {
+    let userID = req.pararms.id;
+    let cardID = req.params.cardid;
+    let user = await Collector.findByPk(userID);
+    let selectedCard = await Card.findByPk(cardID);
+    user.budget = user.budget + selectedCard.price;
+    user.save();
+
+    user.removeCard(selectedCard);
+    
+    res.send(`<h1>${selectedCard.name} was sold for ${selectedCard.price}!</h1>
+              <h2>${user.name}'s budget is at $${user.budget}</h2>`)
 
 })
 
