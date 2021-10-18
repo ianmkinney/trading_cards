@@ -46,7 +46,7 @@ app.get('/:id/pack/:cardid/buy', async (req,res) => {
         await user.addCard(selectedCard)
         await user.save()
         await selectedCard.save()
-        res.send(`<h1>${selectedCard.name} was purchased for ${selectedCard.price}!</h1>
+        res.send(`<h1>${selectedCard.name} ${selectedCard.rarity} was purchased by ${user.name} for $${selectedCard.price}!</h1>
                   <h2>${user.name}'s budget is at $${user.budget}</h2>`)
     } else if(selectedCard.CollectorId != null){
         conflictUser = await Collector.findByPk(selectedCard.CollectorId)
@@ -66,7 +66,7 @@ app.get('/:id/pack/:cardid/sell', async (req,res) => {
         user.budget = user.budget + selectedCard.price;
         await user.save();
         await user.removeCard(selectedCard);
-        res.send(`<h1>${selectedCard.name} was sold for ${selectedCard.price}!</h1>
+        res.send(`<h1>${selectedCard.name} ${selectedCard.rarity} was sold by ${user.name} for $${selectedCard.price}!</h1>
                   <h2>${user.name}'s budget is at $${user.budget}</h2>`)
     } else if(selectedCard.CollectorId == null) {
         res.send('<h1>Card has not be purchased by a collector, so it can not be sold.')
@@ -76,8 +76,28 @@ app.get('/:id/pack/:cardid/sell', async (req,res) => {
     }
 })
 
-app.get('/:id/pack/:cardid1/:cardid2/trade', async (req,res) => {
-
+app.get('/:cardid1/:cardid2/trade', async (req,res) => {
+    let card1ID = req.params.cardid1;
+    let card2ID = req.params.cardid2;
+    let card1 = await Card.findByPk(card1ID)
+    let card2 = await Card.findByPk(card2ID)
+    let user1 = await Collector.findByPk(card1.CollectorId)
+    let user2 = await Collector.findByPk(card2.CollectorId)
+    if(card1.CollectorId == null) {
+        res.send(`<h1>Can not trade ${card1.name} ${card1.rarity} because it has not been purchased.</h1>`)
+    } else if(card2.CollectorId == null) {
+        res.send(`<h1>Can not trade ${card2.name} ${card1.rarity} because it has not been purchased.</h1>`)
+    } else if(card1.CollectorId == card2.CollectorId) {
+        res.send(`<h1>Owner owns both cards! can not trade</h1>`)
+    } else {
+        await user2.removeCard(card2)
+        await user1.removeCard(card1)
+        await user2.addCard(card1)
+        await user1.addCard(card2)
+        await user1.save()
+        await user2.save()
+        res.send(`<h1>${user1.name} traded ${card1.name} ${card1.rarity} with ${user2.name} for ${card2.name} ${card2.rarity}!</h1>`)
+    }
 })
 
 app.listen( PORT, () => {
