@@ -37,7 +37,13 @@ app.get('/:id/pack', async (req,res) => {
 })
 
 app.get('/:id/pack/:cardid/buy', async (req,res) => {
-
+    let userID = req.params.id;
+    let cardID = req.params.cardid;
+    let user = await Collector.findByPk(userID);
+    let selectedCard = await Card.findByPk(cardID);
+    selectedCard.belongsTo(user);
+    user.budget = user.budget - selectedCard.price
+    res.json(user)
 })
 
 app.get('/:id/pack/:cardid/sell', async (req,res) => {
