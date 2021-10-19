@@ -28,38 +28,29 @@ describe('Card collection database', () => {
         expect(testCard.image).toBe('https:\/\/images.pokemontcg.io\/base1\/1.png')
     })
 
-    test('can create a user', async () => {
-        const testUser = await User.create({ username: 'helloGoodbye123', gamesCollected: 'Crash,Spyro,Metroid,Farmville'})
-        
-        expect(testUser.username).toBe('helloGoodbye123')
-        //string manipulation
-        //how can i access 'Crash , Spyro , Metroid , Farmville'?
-        let games = testUser.gamesCollected.split(',').length //'Crash , Spyro , Metroid , Farmville'
-        expect(games).toBe(4)
-    })    
-
-    // //test to check associations Users.hasMany(Games)
-    test('User can have many games', async () => {
+    test('Collector can have many cards', async () => {
         // create a user instance from the User model
-        const newPlayer = await User.create({ username: 'skyboxx123', gamesCollected: 'xyz'})
+        const newCollector = await Collector.create({ name: 'test', budget: 300})
 
         // three game instances from the Game model
-        const streetFighter = await Game.create({ name: 'streetFighter', platform: 'ps1'})
-        const earthBound = await Game.create({ name: 'earthBound', platform: 'snes'})
-        const fireEmblem = await Game.create({ name: 'fireEmblem', platform: 'gameBoy'})
+        const card1 = await Card.findByPk(1)
+        const card2 = await Card.findByPk(2)
+        const card3 = await Card.findByPk(3)
 
         //magic methods where we can associate data from one table to another
         //.add__nameOfTable___ 
-        await newPlayer.addGame(streetFighter)
-        await newPlayer.addGame(earthBound)
-        await newPlayer.addGame(fireEmblem)
+        await newCollector.addCard(card1)
+        await newCollector.addCard(card2)
+        await newCollector.addCard(card3)
 
         //magic method to retrieve all the games from the user
         //.get__nameOfTable__(s) <-pluralize the name of the table
         //CALL THE instance of the USER NOT ON THE TABLE
-        const games = await newPlayer.getGames()
+        const cards = await newCollector.getCards()
 
-        expect(games.length).toBe(3)
+        expect(cards.length).toBe(3)
+
+        newCollector.destroy();
     })
 
 })

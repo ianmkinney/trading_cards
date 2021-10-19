@@ -11,16 +11,20 @@ const { Collector } = require('./models/index')
 seed()
 
 //*************** ROUTES ******************//
+
+// Route to show json of all cards
 app.get('/allCards', async (req, res) => {
     let allCards = await Card.findAll()
     res.json({allCards})
 })
 
+// Route to show json of all users
 app.get('/allCollectors', async (req,res) => {
     let allCollectors = await Collector.findAll()
     res.json({allCollectors})
 })
 
+// Route to generate pack for desired user
 app.get('/:id/pack', async (req,res) => {
     let ids = []
     let cards = []
@@ -36,6 +40,7 @@ app.get('/:id/pack', async (req,res) => {
     res.json({cards})
 })
 
+// Route to buy a card
 app.get('/:id/pack/:cardid/buy', async (req,res) => {
     const userID = req.params.id;
     const cardID = req.params.cardid;
@@ -56,7 +61,7 @@ app.get('/:id/pack/:cardid/buy', async (req,res) => {
     }
 })
 
-//selling a card
+// Route to sell a card
 app.get('/:id/pack/:cardid/sell', async (req,res) => {
     let userID = req.params.id;
     let cardID = req.params.cardid;
@@ -76,6 +81,7 @@ app.get('/:id/pack/:cardid/sell', async (req,res) => {
     }
 })
 
+// Route to trade cards
 app.get('/:cardid1/:cardid2/trade', async (req,res) => {
     let card1ID = req.params.cardid1;
     let card2ID = req.params.cardid2;
